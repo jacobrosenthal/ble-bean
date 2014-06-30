@@ -1,0 +1,26 @@
+{
+  "name": "beans",
+  "version": "0.1.0",
+  "description": "Lightblue Bean Transport Service",
+  "main": "lib/bean.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "crc": "^2.1.1",
+    "noble": "^0.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ble",
+    "bean",
+    "punchthrough",
+    "service",
+    "noble"
+  ],
+  "author": "Jacob Rosenthal",
+  "license": "MIT"
+}
