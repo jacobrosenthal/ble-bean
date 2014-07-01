@@ -1,12 +1,11 @@
 /*jslint node: true */
 "use strict";
 
-var scan = require('../scan');
+var noble = require('noble');
 var beanAPI = require('../lib/bean');
 
 var connectedBean;
 var intervalId;
-var periph;
 
 var ready = function(){
 
@@ -24,6 +23,7 @@ var ready = function(){
 
   intervalId = setInterval(function() {
 
+    //set random led colors between 0-255. I find red overpowering so red between 0-64
     connectedBean.setColor(new Buffer([getRandomInt(0,64),getRandomInt(0,255),getRandomInt(0,255)]),
       function(){
         console.log("set");
@@ -40,11 +40,9 @@ var ready = function(){
 
 var connect = function(err){
   if (err) throw err;
+  process.on('SIGINT', exitHandler.bind({peripheral:this.peripheral}));
 
-  periph = this.peripheral;
-  process.on('SIGINT', exitHandler);
-
-  this.peripheral.discoverServices(['a495ff10c5b14b44b5121370f02d74de'], setupService);
+  this.peripheral.discoverServices([beanAPI.UUID], setupService);
 };
 
 var setupService = function(err,services) {
@@ -53,10 +51,14 @@ var setupService = function(err,services) {
   connectedBean.on('ready', ready);
 };
 
-var peripherals = new Array(1);
-scan.scan(10000, beanAPI.UUID, peripherals, function(peripherals){
-  peripherals[0].connect(connect.bind({peripheral:peripherals[0]}));
-});
+var discover = function(peripheral){
+  console.log("(scan)found:" + peripheral.advertisement.localName);
+  noble.stopScanning();
+  peripheral.connect(connect.bind({peripheral:peripheral}));
+};
+
+noble.startScanning([beanAPI.UUID]);
+noble.on('discover', discover);
 
 var getRandomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -68,18 +70,18 @@ var triedToExit = false;
 //turns off led before disconnecting
 var exitHandler = function exitHandler() {
 
-  if (periph && !triedToExit) {
+  var self = this;
+  if (this.peripheral && !triedToExit) {
     triedToExit = true;
     console.log('Disconnecting from Device...');
     clearInterval(intervalId);
     connectedBean.setColor(new Buffer([0x00,0x00,0x00]), function(){
-      periph.disconnect( function(){
+      self.peripheral.disconnect( function(){
           console.log('disconnected');
           process.exit();
       });
     });
   } else {
-    //if this is uncommented it doesnt disconnect device?
     process.exit();
   }
 };

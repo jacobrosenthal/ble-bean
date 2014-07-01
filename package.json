@@ -1,6 +1,6 @@
 {
-  "name": "beans",
-  "version": "0.1.0",
+  "name": "ble-bean",
+  "version": "0.2.0",
   "description": "Lightblue Bean Transport Service",
   "main": "lib/bean.js",
   "directories": {
@@ -14,6 +14,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": "https://github.com/jacobrosenthal/ble-bean",
   "keywords": [
     "ble",
     "bean",
