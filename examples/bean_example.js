@@ -3,11 +3,13 @@
 
 var noble = require('noble');
 var beanAPI = require('../lib/bean');
+var scratchAPI = require('../lib/scratch');
 
 var connectedBean;
+var connectedScratch;
 var intervalId;
 
-var ready = function(){
+var readyBean = function(){
 
   connectedBean.on("accell", function(x,y,z){
     console.log("received accell");
@@ -38,17 +40,55 @@ var ready = function(){
 
 };
 
+var readyScratch = function(){
+
+  connectedScratch.on("scratch1", function(data){
+    console.log("scratch1");
+    console.log(data);
+  });
+
+  connectedScratch.on("scratch2", function(data){
+    console.log("scratch2");
+    console.log(data);
+  });
+
+  connectedScratch.on("scratch3", function(data){
+    console.log("scratch3");
+    console.log(data);
+  });
+
+  connectedScratch.on("scratch4", function(data){
+    console.log("scratch4");
+    console.log(data);
+  });
+
+  connectedScratch.on("scratch5", function(data){
+    console.log("scratch5");
+    console.log(data);
+  });
+
+};
+
 var connect = function(err){
   if (err) throw err;
   process.on('SIGINT', exitHandler.bind({peripheral:this.peripheral}));
 
-  this.peripheral.discoverServices([beanAPI.UUID], setupService);
+  this.peripheral.discoverServices([], setupService);
 };
 
 var setupService = function(err,services) {
   if (err) throw err;
-  connectedBean = new beanAPI.Bean(services[0]);
-  connectedBean.on('ready', ready);
+  services.forEach(function(service){
+    if(service.uuid === beanAPI.UUID){
+      connectedBean = new beanAPI.Bean(service);
+      connectedBean.on('ready', readyBean);
+    }else if(service.uuid === scratchAPI.UUID){
+      console.log("found");
+      connectedScratch = new scratchAPI.Scratch(service);
+      connectedScratch.on('ready', readyScratch);
+    }
+  });
+
 };
 
 var discover = function(peripheral){
