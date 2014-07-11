@@ -12,10 +12,7 @@ var intervalId;
 var readyBean = function(){
 
   connectedBean.on("accell", function(x,y,z){
-    console.log("received accell");
-    console.log(x);
-    console.log(y);
-    console.log(z);
+    console.log("\tx:\t" + x + "\ty:\t" + y + "\tz:\t" + z );
   });
 
   connectedBean.on("read", function(data){
