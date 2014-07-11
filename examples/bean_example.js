@@ -11,12 +11,13 @@ var intervalId;
 
 var readyBean = function(){
 
-  connectedBean.on("accell", function(x,y,z){
-    console.log("\tx:\t" + x + "\ty:\t" + y + "\tz:\t" + z );
+  connectedBean.on("accell", function(x,y,z, valid, seq){
+    console.log("x:\t" + x + "\ty:\t" + y + "\tz:\t" + z );
   });
 
-  connectedBean.on("read", function(data){
-    console.log("received raw read");
+  connectedBean.on("read", function(data, valid, seq, size){
+    var status = valid ? "valid" : "invalid";
+    console.log("received " + status + " packet, seq # " + seq + " with " + size + " bytes of payload" );
     console.log(data);
   });
 
@@ -25,12 +26,12 @@ var readyBean = function(){
     //set random led colors between 0-255. I find red overpowering so red between 0-64
     connectedBean.setColor(new Buffer([getRandomInt(0,64),getRandomInt(0,255),getRandomInt(0,255)]),
       function(){
-        console.log("set");
+        console.log("set led");
     });
 
     connectedBean.requestAccell(
     function(){
-      console.log("requested");
+      console.log("requested accell");
     });
 
   },1000);

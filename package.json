@@ -1,7 +1,7 @@
 {
   "name": "ble-bean",
-  "version": "0.2.0",
-  "description": "Lightblue Bean Transport Service",
+  "version": "0.3.0",
+  "description": "Lightblue Bean BLE Services",
   "main": "lib/bean.js",
   "directories": {
     "test": "test"
