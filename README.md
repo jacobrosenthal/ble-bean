@@ -12,3 +12,8 @@ better logging in example, took console.log out of library
 0.5.0 
 scale acceleromter readings
 added readme with changelog
+
+0.6.0
+only emit command specific emits when packets are valid
+refactor for cleaner code
+add write scratch characteristics
