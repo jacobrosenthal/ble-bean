@@ -84,3 +84,6 @@ add write serial data to bean characteristic
 
 0.7.1
 Better readme, no code changes.
+
+0.8.0
+New Serial event for parsed serial data called 'serial'
