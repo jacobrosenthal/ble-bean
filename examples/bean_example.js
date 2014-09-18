@@ -15,6 +15,10 @@ var readyBean = function(){
     console.log("x:\t" + x + "\ty:\t" + y + "\tz:\t" + z );
   });
 
+  connectedBean.on("temp", function(temp, valid, seq){
+    console.log("temp:\t" + temp);
+  });
+
   connectedBean.on("read", function(data, valid, seq, size){
     var status = valid ? "valid" : "invalid";
     console.log("received " + status + " packet, seq # " + seq + " with " + size + " bytes of payload" );
@@ -32,6 +36,11 @@ var readyBean = function(){
     connectedBean.requestAccell(
     function(){
       console.log("requested accell");
+    });
+
+    connectedBean.requestTemp(
+    function(){
+      console.log("requested temp");
     });
 
   },1000);
