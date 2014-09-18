@@ -34,7 +34,7 @@ connectedBean.requestAccell(callback(error));
 
 You can set the led color (in this case to a random color) with:
 ```
-connectedBean.setColor(new Buffer([getRandomInt(0,64),getRandomInt(0,255),getRandomInt(0,255)]), callback(error));
+connectedBean.setColor(new Buffer([255,255,255]), callback(error));
 ```
 
 If theres something I haven implemented you can create it yourself with the send command. See commands.js for commandBuffers to use:
