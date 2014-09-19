@@ -11,17 +11,25 @@ var intervalId;
 
 var readyBean = function(){
 
-  connectedBean.on("accell", function(x,y,z, valid, seq){
-    console.log("x:\t" + x + "\ty:\t" + y + "\tz:\t" + z );
-  });
-
-  connectedBean.on("temp", function(temp, valid, seq){
-    console.log("temp:\t" + temp);
-  });
-
-  connectedBean.on("read", function(data, valid, seq, size){
+  connectedBean.on("accell", function(x, y, z, valid){
     var status = valid ? "valid" : "invalid";
-    console.log("received " + status + " packet, seq # " + seq + " with " + size + " bytes of payload" );
+    console.log("received " + status + " accell\tx:\t" + x + "\ty:\t" + y + "\tz:\t" + z );
+  });
+
+  connectedBean.on("temp", function(temp, valid){
+    var status = valid ? "valid" : "invalid";
+    console.log("received " + status + " temp:\t" + temp);
+  });
+
+  connectedBean.on("serial", function(data, valid){
+    var status = valid ? "valid" : "invalid";
+    console.log("received " + status + " serial");
+    console.log(data);
+  });
+
+  connectedBean.on("raw", function(data, length, valid, command){
+    var status = valid ? "valid" : "invalid";
+    console.log("received " + status + " packet with " + length + " bytes of payload and a command of " + command);
     console.log(data);
   });
 
