@@ -1,7 +1,7 @@
 ##BLE-Bean
 Non Official api for the LightBlue Bean http://punchthrough.com/bean/
 
-ble-bean is set up a litte differently than other libraries. I'm playing with exposing services and characteristics, rather than the device. You need to use noble to search for services, and create an instance of Bean or Scratch. See the example.
+ble-bean is set up a litte differently than other BLE libraries. I'm playing with exposing services and characteristics, rather than the device. You need to use noble to search for services, and create an instance of Bean or Scratch. See the example.
 
 ###INSTALL
 ```
@@ -18,18 +18,34 @@ connectedBean.write(new Buffer([0x91,0x00,0x00]),callback(error));
 
 You can read the raw data from the device with:
 ```
-connectedBean.on("read", callback(data, valid, seq, size));
+connectedBean.on("raw", callback(data, length, valid, command));
 
 ```
 
-Or theres a job specific emitters to do parsing for you, like accelerometer:
+Or theres a job specific emitters to do parsing for you, like serial:
 ```
-connectedBean.on("accell", callback(x, y, z, valid, seq));
+connectedBean.on("serial", callback(data, valid));
+
 ```
 
-To read the accelerometer though, you need to ask it to take a reading with:
+Or accellerometer:
+```
+connectedBean.on("accell", callback(x, y, z, valid));
+```
+
+But to read the accelerometer, you need to ask it to take a reading with:
 ```
 connectedBean.requestAccell(callback(error));
+```
+
+Temperature:
+```
+connectedBean.on("temp", callback(temp, valid));
+```
+
+But to read the temp, you need to ask it to take a reading with:
+```
+connectedBean.requestTemp(callback(error));
 ```
 
 You can set the led color (in this case to a random color) with:
@@ -87,3 +103,9 @@ Better readme, no code changes.
 
 0.8.0
 New Serial event for parsed serial data called 'serial'
+
+1.0.0
+Emitter callback signatures changed!! 
+'read' emitter became 'raw'
+accell and serial changed removing the sequence since its handled internally now.
+Added requestTemp.
