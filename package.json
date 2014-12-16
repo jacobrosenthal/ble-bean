@@ -2,13 +2,14 @@
   "name": "ble-bean",
   "version": "1.0.0",
   "description": "Lightblue Bean BLE Services",
-  "main": "lib/bean.js",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
     "crc": "^2.1.1",
-    "noble": "^0.3.1"
+    "noble": "^0.3.1",
+    "noble-device": "git+ssh://git@github.com:sandeepmistry/noble-device.git"
   },
   "devDependencies": {},
   "scripts": {

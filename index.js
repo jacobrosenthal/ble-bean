@@ -1,47 +1,76 @@
 /*jslint node: true */
 "use strict";
 
+var NobleDevice = require('noble-device');
+
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var crc = require('crc');
-var commands = require('./commands');
+var commands = require('./lib/commands');
+var ScratchOne = require('./lib/ScratchOne');
+var ScratchTwo = require('./lib/ScratchTwo');
+var ScratchThree = require('./lib/ScratchThree');
+var ScratchFour = require('./lib/ScratchFour');
+var ScratchFive = require('./lib/ScratchFive');
 
-var UUID = 'a495ff10c5b14b44b5121370f02d74de';
+var SERIAL_UUID = 'a495ff10c5b14b44b5121370f02d74de';
 var BEAN_SERIAL_CHAR_UUID = 'a495ff11c5b14b44b5121370f02d74de';
 
-module.exports = {
-  Bean : Bean,
-  UUID : UUID
-};
+var SCRATCH_UUID = 'a495ff20c5b14b44b5121370f02d74de';
 
-function Bean(service) {
+var SCRATCH1 = 'a495ff21c5b14b44b5121370f02d74de';
+var SCRATCH2 = 'a495ff22c5b14b44b5121370f02d74de';
+var SCRATCH3 = 'a495ff23c5b14b44b5121370f02d74de';
+var SCRATCH4 = 'a495ff24c5b14b44b5121370f02d74de';
+var SCRATCH5 = 'a495ff25c5b14b44b5121370f02d74de';
+
+var Bean = function(peripheral) {
   if (!(this instanceof Bean)) 
   return new Bean();
+
+  NobleDevice.call(this, peripheral);
   
   EventEmitter.call(this);
-
-  var self = this;
 
   this.count = 0;
   this.gst = new Buffer(0);
 
-  service.discoverCharacteristics([BEAN_SERIAL_CHAR_UUID], function(err, characteristics){
-    self._initialize(err, characteristics);
-  });
+};
 
-}
+Bean.SCAN_UUIDS = [SERIAL_UUID];
+
+Bean.is = function(peripheral) {
+  return (peripheral.advertisement.localName === "Bean"); //you HAVE to specify correctly?
+};
+
 util.inherits(Bean, EventEmitter);
+NobleDevice.Util.inherits(Bean, NobleDevice);
+NobleDevice.Util.mixin(Bean, NobleDevice.BatteryService);
+NobleDevice.Util.mixin(Bean, NobleDevice.DeviceInformationService);
 
-Bean.prototype._initialize = function(err,characteristics) {
-  this.chara = characteristics[0];
-  this.chara.on('read', this._onRead.bind(this));
+NobleDevice.Util.mixin(Bean, ScratchOne);
+NobleDevice.Util.mixin(Bean, ScratchTwo);
+NobleDevice.Util.mixin(Bean, ScratchThree);
+NobleDevice.Util.mixin(Bean, ScratchFour);
+NobleDevice.Util.mixin(Bean, ScratchFive);
 
-  this.chara.notify(true, function(err) {
-    if (err) throw err;
-    console.log('Successfully subscribed to Bean serial notifications.');
+Bean.prototype.connectAndSetup = function(callback) {
+
+  var self = this;
+
+  NobleDevice.prototype.connectAndSetup.call(self, function(){
+
+    self.notifyCharacteristic(SERIAL_UUID, BEAN_SERIAL_CHAR_UUID, true, self._onRead.bind(self), function(err){
+
+      if (err) throw err;
+
+      self.emit('ready',err);
+      callback(err);
+
+    });
+
   });
 
-  this.emit('ready',err);
 };
 
 Bean.prototype._onRead = function(gt){
@@ -101,11 +130,11 @@ Bean.prototype._onRead = function(gt){
 
       this.emit('invalid', this.gst.slice(2,this.gst.length-2), length, valid, command);
 
+      }
+
     }
 
   }
-
-}
 
 };
 
@@ -134,7 +163,8 @@ Bean.prototype.send = function(cmdBuffer,payloadBuffer,done){
   gattBuffer[gattBuffer.length-2]=crc16Buffer[1];
   gattBuffer[gattBuffer.length-1]=crc16Buffer[0];
 
-  this.chara.write(gattBuffer, false, done);
+  this.writeDataCharacteristic(SERIAL_UUID, BEAN_SERIAL_CHAR_UUID, gattBuffer, done);
+
 };
 
 Bean.prototype.write = function(data, done){
@@ -152,3 +182,5 @@ Bean.prototype.requestAccell = function(done){
 Bean.prototype.requestTemp = function(done){
   this.send(commands.MSG_ID_CC_TEMP_READ, new Buffer([]), done);
 };
+
+module.exports = Bean;
