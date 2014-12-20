@@ -1,7 +1,7 @@
 ##BLE-Bean
 Non Official api for the LightBlue Bean http://punchthrough.com/bean/
 
-ble-bean is set up a litte differently than other BLE libraries. I'm playing with exposing services and characteristics, rather than the device. You need to use noble to search for services, and create an instance of Bean or Scratch. See the example.
+ble-bean is set up a little differently than other BLE libraries. I'm playing with exposing services and characteristics, rather than the device. You need to use noble to search for services, and create an instance of Bean or Scratch. See the example.
 
 ###INSTALL
 ```
@@ -11,7 +11,7 @@ npm install ble-bean
 
 ####Bean:
 
-You can wite data which can be read on arduino with Serial.read - in this instance 91,00,00 is firmata for all pins on port 0 low
+You can write data which can be read on arduino with Serial.read - in this instance 91,00,00 is firmata for all pins on port 0 low
 ```
 connectedBean.write(new Buffer([0x91,0x00,0x00]),callback(error));
 ```
@@ -22,7 +22,7 @@ connectedBean.on("raw", callback(data, length, valid, command));
 
 ```
 
-Or theres a job specific emitters to do parsing for you, like serial:
+Or there's a job specific emitters to do parsing for you, like serial:
 ```
 connectedBean.on("serial", callback(data, valid));
 
@@ -33,7 +33,7 @@ Or accellerometer:
 connectedBean.on("accell", callback(x, y, z, valid));
 ```
 
-But to read the accelerometer, you need to ask it to take a reading with:
+But to read the accellerometer, you need to ask it to take a reading with:
 ```
 connectedBean.requestAccell(callback(error));
 ```
@@ -53,7 +53,7 @@ You can set the led color (in this case to a random color) with:
 connectedBean.setColor(new Buffer([255,255,255]), callback(error));
 ```
 
-If theres something I haven implemented you can create it yourself with the send command. See commands.js for commandBuffers to use:
+If theres something I haven't implemented you can create it yourself with the send command. See commands.js for commandBuffers to use:
 ```
 connectedBean.send(commandBuffer, dataBuffer, callback(error));
 ```
