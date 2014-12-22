@@ -32,13 +32,6 @@ Bean.discover(function(bean){
 
   bean.connectAndSetup(function(){
 
-    bean.notifyOne(function(data){
-      console.log("scratch1");
-      console.log(data);
-    }, function(){
-      console.log("notifying on scratch one");
-    })
-
     var readData = function() {
 
       //set random led colors between 0-255. I find red overpowering so red between 0-64
