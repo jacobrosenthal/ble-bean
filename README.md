@@ -98,3 +98,6 @@ Added requestTemp.
 Move to new noble-device pattern which significantly removes noble cruft from implementation. 
 Changes the scratch characteristic API.
 Example has cleaner disconnect code.
+
+2.0.1
+Clean and split up examples
