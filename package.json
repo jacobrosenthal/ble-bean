@@ -1,6 +1,6 @@
 {
   "name": "ble-bean",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Lightblue Bean BLE Services",
   "main": "index.js",
   "directories": {
