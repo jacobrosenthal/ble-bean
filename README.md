@@ -101,3 +101,7 @@ Example has cleaner disconnect code.
 
 2.0.1
 Clean and split up examples
+
+2.0.2
+Fixed bug in Scratch write implementation
+clean up firmata example
