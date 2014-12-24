@@ -2,14 +2,24 @@
 "use strict";
 
 /* 
- * This script sends the digital write 13 (for various reason Bean Pin 5) off and on.
- * I SUPER highly dont recommend you actually do it this way, this is just for testing.
- * Please see bean-serial for firmata.j
+ * This script sends digital write 13 (for various reasons Bean Pin 5 currently) off and on.
+ * NOTE this has no relation to the RGB led on the bean, you would have to hook an led to pin 5.
+ * a0 -> a4
+ * a1 -> a5
+ * d0 -> d6
+ * d1 -> d9
+ * d2 -> d10
+ * d3 -> d11
+ * d4 -> d12
+ * d5 -> d13
+ * I SUPER highly dont recommend you actually don't actually use this script. 
+ * other than for testing. There are great firmata implementations already written in 
+ * javascript. See bean-serial for a firmata.js implementation
  * https://www.npmjs.com/package/bean-serial
- * or bean-io for a Johnny for Johnny Five support
+ * or bean-io for a Johnny for Johnny Five implementation
  * https://www.npmjs.com/package/bean-io
- * Needs a firmata sketch programmed onto Arduino:
- * https://gist.github.com/jacobrosenthal/5044a5f660d2bda84060
+ *
+ * Requires the default StandardFirmata found in the examples menu to be programmed onto Arduino:
  */
 
 var Bean = require('../');
@@ -22,7 +32,7 @@ Bean.discover(function(bean){
   process.on('SIGINT', exitHandler.bind(this));
 
   bean.on("serial", function(data, valid){
-    console.log(data.toString());
+    console.log("javascript received", data.toString('hex'), data.toString('utf8'));
   });
 
   bean.on("disconnect", function(){
@@ -30,26 +40,27 @@ Bean.discover(function(bean){
   });
 
   bean.connectAndSetup(function(){
-
-    bean.notifyOne(
-      //called when theres data
-      function(data){
-        if(data && data.length>=2){
-          var value = data[1]<<8 || (data[0]);
-          console.log("one:", value);
-        }
-      },
-      //called when the notify is successfully or unsuccessfully setup
-      function(error){
-        if(error) console.log("one setup: ", error);
-      });
-
-    setInterval(bean.write.bind(bean, new Buffer([0x91, 0x00, 0x00]), function(){}), 5000);
-    setInterval(bean.write.bind(bean, new Buffer([0x91, 0x20, 0x00]), function(){}), 7500);
-
+      setInterval(toggle, 5000);
   });
 
 });
+
+var on = false;
+
+function toggle(){
+
+  if(on){
+    connectedBean.write(new Buffer([0x91, 0x00, 0x00]), function(){
+      console.log("toggled off");
+    });
+  }else{
+    connectedBean.write(new Buffer([0x91, 0x20, 0x00]), function(){
+      console.log("toggled on");
+    });
+  }
+
+  on=!on;
+}
 
 process.stdin.resume();//so the program will not close instantly
 var triedToExit = false;
