@@ -105,3 +105,6 @@ Clean and split up examples
 2.0.2
 Fixed bug in Scratch write implementation
 clean up firmata example
+
+2.1.0
+newer firmwares are gating serial SEND during first x seconds, added unGate function to disable
