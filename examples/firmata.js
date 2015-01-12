@@ -40,7 +40,12 @@ Bean.discover(function(bean){
   });
 
   bean.connectAndSetup(function(){
-      setInterval(toggle, 5000);
+    //theres a new feature where the bean disable serial SENDS for the first x seconds
+    //if you're using the bean for serial stuff you probably dont want this
+    bean.unGate(function(){
+      console.log('ungated');
+      setInterval(toggle, 1000);
+    });
   });
 
 });
