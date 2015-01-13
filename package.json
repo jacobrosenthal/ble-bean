@@ -11,9 +11,13 @@
     "noble": "^0.3.1",
     "noble-device": "^0.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0",
+    "sinon": "^1.12.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --include test/*.js test/*.js --reporter spec"
   },
   "repository": "https://github.com/jacobrosenthal/ble-bean",
   "keywords": [
