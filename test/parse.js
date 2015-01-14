@@ -19,6 +19,7 @@ describe('Bean', function () {
   beforeEach(function () {
     sandbox = sinon.sandbox.create();
     bean = new Bean();
+    bean.writeDataCharacteristic = function(SERIAL_UUID, BEAN_SERIAL_CHAR_UUID, gattBuffer, done){done();};
   });
 
   // afterEach(function () {
@@ -118,6 +119,80 @@ describe('Bean', function () {
         done();
       });
       bean._onRead(BAD_SERIAL_DATA);
+    });
+
+  });
+
+  describe('Send', function () {
+
+    it('requests led on', function (done) {
+      var spy = sandbox.spy(bean, 'writeDataCharacteristic');
+      bean.setColor(new Buffer([0x04, 0x1f, 0x5c]), function(){
+        expect(spy.args[0][2]).to.eql(new Buffer([0x80, 0x05, 0x00, 0x20, 0x01, 0x04, 0x1f, 0x5c, 0x9d, 0xa2]));
+        done();
+      });
+    });
+
+    it('requests accell', function (done) {
+      var spy = sandbox.spy(bean, 'writeDataCharacteristic');
+      bean.requestAccell(
+      function(){
+        expect(spy.args[0][2]).to.eql(new Buffer([0x80, 0x02, 0x00, 0x20, 0x10, 0x7f, 0x7d]));
+        done();
+      });
+    });
+
+    it('requests temp', function (done) {
+      var spy = sandbox.spy(bean, 'writeDataCharacteristic');
+      bean.requestTemp(
+      function(){
+        expect(spy.args[0][2]).to.eql(new Buffer([0x80, 0x02, 0x00, 0x20, 0x11, 0x5e, 0x6d]));
+        done();
+      });
+    });
+
+    it('requests ungate', function (done) {
+      var spy = sandbox.spy(bean, 'writeDataCharacteristic');
+      bean.unGate(
+        function(){
+        expect(spy.args[0][2]).to.eql(new Buffer([0x80, 0x02, 0x00, 0x05, 0x50, 0xa8, 0xcc]));
+        done();
+      });
+    });
+
+
+    it('requests led off', function (done) {
+      var spy = sandbox.spy(bean, 'writeDataCharacteristic');
+      bean.setColor(new Buffer([0x00, 0x00, 0x00]), function(){
+        expect(spy.args[0][2]).to.eql(new Buffer([0x80, 0x05, 0x00, 0x20, 0x01, 0x00, 0x00, 0x00, 0x69, 0xf6]));
+        done();
+      });
+    });
+
+    it('increments counter', function (done) {
+      var spy = sandbox.spy(bean, 'writeDataCharacteristic');
+      bean.setColor(new Buffer([0x00, 0x00, 0x00]), function(){
+        bean.setColor(new Buffer([0x00, 0x00, 0x00]), function(){
+          expect(spy.args[1][2]).to.eql(new Buffer([0xa0, 0x05, 0x00, 0x20, 0x01, 0x00, 0x00, 0x00, 0x69, 0xf6]));
+          done();
+        });
+      });
+    });
+
+    it('rolls over counter', function (done) {
+      var spy = sandbox.spy(bean, 'writeDataCharacteristic');
+      bean.setColor(new Buffer([0x00, 0x00, 0x00]), function(){
+        bean.setColor(new Buffer([0x00, 0x00, 0x00]), function(){
+          bean.setColor(new Buffer([0x00, 0x00, 0x00]), function(){
+            bean.setColor(new Buffer([0x00, 0x00, 0x00]), function(){
+              bean.setColor(new Buffer([0x00, 0x00, 0x00]), function(){
+                expect(spy.args[4][2]).to.eql(new Buffer([0x80, 0x05, 0x00, 0x20, 0x01, 0x00, 0x00, 0x00, 0x69, 0xf6]));
+                done();
+              });
+            });
+          });
+        });
+      });
     });
 
   });
