@@ -61,11 +61,10 @@ describe('Bean', function () {
   describe('Parse', function () {
 
     it('parses raw data', function (done) {
-      bean.on('raw', function(buf, length, valid, command){
+      bean.on('raw', function(buf, length, valid){
         expect(buf).to.eql(new Buffer([0x20, 0x90, 0xc4, 0x00, 0xe4, 0xff, 0x6d, 0x00, 0x02]));
         expect(length).to.eql(9);
         expect(valid).to.eql(true);
-        expect(command).to.eql(8208);
 
         done();
       });
