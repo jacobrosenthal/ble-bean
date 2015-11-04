@@ -1,6 +1,6 @@
 {
   "name": "ble-bean",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Lightblue Bean BLE Services",
   "main": "index.js",
   "directories": {
@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "crc": "^2.1.1",
-    "noble": "^0.3.1",
-    "noble-device": "^0.1.0"
+    "noble": "^1.2.0",
+    "noble-device": "^1.1.0"
   },
   "devDependencies": {
     "chai": "^1.10.0",
